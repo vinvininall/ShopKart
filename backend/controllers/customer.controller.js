@@ -207,12 +207,12 @@ const changePassword = async (req, res) => {
 const addProductToWishlist = async (req, res) => {
   try {
     const { productId } = req.params;
-
     if (!mongoose.Types.ObjectId.isValid(productId)) {
       return res.status(400).json({
         success: false,
         message: "Invalid Product ID",
       });
+      // 400 means bad request.
     }
 
     const product = await Product.findById(productId);
@@ -231,6 +231,7 @@ const addProductToWishlist = async (req, res) => {
         success: false,
         message: "Unauthorized",
       });
+      // 401 means unauthorized.
     }
 
     const alreadySaved = customer.wishlist.some((item) => item.toString() === productId);
