@@ -25,6 +25,13 @@ const customerSchema = new mongoose.Schema(
       required: [true, "Phone number is required"],
       trim: true,
     },
+    wishlist: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product",
+        default: [],
+      },
+    ],
   },
   { timestamps: { createdAt: true, updatedAt: false } }
 );

@@ -1,4 +1,6 @@
+const mongoose = require("mongoose");
 const Customer = require("../models/customer.model");
+const Product = require("../models/product.model");
 const generateToken = require("../utils/generateToken");
 
 const cookieOptions = () => ({
@@ -202,10 +204,134 @@ const changePassword = async (req, res) => {
   }
 };
 
+const addProductToWishlist = async (req, res) => {
+  try {
+    const { productId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(productId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Product ID",
+      });
+    }
+
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: "Product does not exist",
+      });
+    }
+
+    const customer = await Customer.findById(req.user._id);
+
+    if (!customer) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+      });
+    }
+
+    const alreadySaved = customer.wishlist.some((item) => item.toString() === productId);
+
+    if (alreadySaved) {
+      return res.status(409).json({
+        success: false,
+        message: "Product already saved",
+      });
+    }
+
+    customer.wishlist.push(product._id);
+    await customer.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Product added to wishlist",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong",
+    });
+  }
+};
+
+const getWishlist = async (req, res) => {
+  try {
+    const customer = await Customer.findById(req.user._id).populate("wishlist");
+
+    if (!customer) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      count: customer.wishlist.length,
+      wishlist: customer.wishlist,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong while loading your wishlist",
+    });
+  }
+};
+
+const removeProductFromWishlist = async (req, res) => {
+  try {
+    const { productId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(productId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Product ID",
+      });
+    }
+
+    const customer = await Customer.findById(req.user._id);
+
+    if (!customer) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+      });
+    }
+
+    const isSaved = customer.wishlist.some((item) => item.toString() === productId);
+
+    if (!isSaved) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not in wishlist",
+      });
+    }
+
+    customer.wishlist = customer.wishlist.filter((item) => item.toString() !== productId);
+    await customer.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Product removed from wishlist",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong",
+    });
+  }
+};
+
 module.exports = {
   registerCustomer,
   loginCustomer,
   getMyProfile,
   logoutCustomer,
   changePassword,
+  addProductToWishlist,
+  getWishlist,
+  removeProductFromWishlist,
 };
