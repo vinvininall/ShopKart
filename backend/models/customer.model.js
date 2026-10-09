@@ -32,6 +32,21 @@ const customerSchema = new mongoose.Schema(
         default: [],
       },
     ],
+    cart: [
+      {
+        product: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Product",
+          required: true,
+        },
+        quantity: {
+          type: Number,
+          required: true,
+          min: [1, "Cart quantity must be at least 1"],
+          default: 1,
+        },
+      },
+    ],
   },
   { timestamps: { createdAt: true, updatedAt: false } }
 );
