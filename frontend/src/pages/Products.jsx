@@ -22,7 +22,7 @@ function Products() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All Categories");
   const [isLoading, setIsLoading] = useState(true);
-  const [wishlistLoading, setWishlistLoading] = useState(false);
+  const [wishlistLoading, setWishlistLoading] = useState("");
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -95,7 +95,7 @@ function Products() {
       } finally {
         if (isMounted) {
           setIsLoading(false);
-          setWishlistLoading(false);
+          setWishlistLoading("");
         }
       }
     };
@@ -109,7 +109,7 @@ function Products() {
 
   const handleWishlistToggle = async (productId) => {
     const isSaved = savedProductIds.includes(productId);
-    setWishlistLoading(true);
+    setWishlistLoading(productId);
 
     try {
       if (isSaved) {
@@ -122,7 +122,7 @@ function Products() {
     } catch (err) {
       setError(getApiErrorMessage(err, "Unable to update your wishlist."));
     } finally {
-      setWishlistLoading(false);
+      setWishlistLoading("");
     }
   };
 
@@ -163,7 +163,7 @@ function Products() {
                   key={product._id}
                   product={product}
                   isWishlisted={savedProductIds.includes(product._id)}
-                  isProcessing={wishlistLoading}
+                  isProcessing={wishlistLoading === product._id}
                   onWishlistToggle={handleWishlistToggle}
                 />
               ))}

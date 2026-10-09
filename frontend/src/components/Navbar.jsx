@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import CartBadge from "./CartBadge.jsx";
 import { getApiErrorMessage, logoutCustomer } from "../services/api";
 
 function Navbar() {
@@ -36,6 +37,7 @@ function Navbar() {
           <Link to="/home">Home</Link>
           <Link to="/products">Products</Link>
           <Link to="/wishlist">Wishlist</Link>
+          <CartBadge />
           <button
             type="button"
             className="btn btn-outline"
