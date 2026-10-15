@@ -41,6 +41,7 @@ const getCart = async (req, res) => {
         stock: item.product.stock,
         quantity: item.quantity,
       }));
+      //same process gets repeated as "Add to cart , except few additions like duplicate availability"
 
     return res.status(200).json({
       success: true,

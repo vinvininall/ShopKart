@@ -37,6 +37,7 @@ function Navbar() {
           <Link to="/home">Home</Link>
           <Link to="/products">Products</Link>
           <Link to="/wishlist">Wishlist</Link>
+          <Link to="/orders">My Orders</Link>
           <CartBadge />
           <button
             type="button"

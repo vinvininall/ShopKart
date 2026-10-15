@@ -7,6 +7,10 @@ import Products from "./pages/Products.jsx";
 import Register from "./pages/Register.jsx";
 import Wishlist from "./pages/Wishlist.jsx";
 import Cart from "./pages/Cart.jsx";
+import Checkout from "./pages/Checkout.jsx";
+import Orders from "./pages/Orders.jsx";
+import OrderDetails from "./pages/OrderDetails.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 function App() {
   return (
@@ -19,6 +23,11 @@ function App() {
         <Route path="/products" element={<Products />} />
         <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/cart" element={<Cart />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/orders" element={<Orders />} />
+          <Route path="/orders/:id" element={<OrderDetails />} />
+        </Route>
         <Route path="/products/:id" element={<ProductDetails />} />
       </Routes>
     </CartProvider>

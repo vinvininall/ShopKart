@@ -38,6 +38,11 @@ export function CartProvider({ children }) {
     setError("");
   }, []);
 
+  const clearCart = useCallback(() => {
+    setCartItems([]);
+    setError("");
+  }, []);
+
   const addItemToCart = useCallback(async (productId) => {
     setPendingActions((current) => ({ ...current, [productId]: "add" }));
 
@@ -102,10 +107,11 @@ export function CartProvider({ children }) {
     pendingActions,
     totalItems: cartItems.reduce((sum, item) => sum + (item.quantity || 0), 0),
     refreshCart,
+    clearCart,
     addItemToCart,
     updateItemQuantity,
     removeItemFromCart,
-  }), [cartItems, loading, error, pendingActions, refreshCart, addItemToCart, updateItemQuantity, removeItemFromCart]);
+  }), [cartItems, loading, error, pendingActions, refreshCart, clearCart, addItemToCart, updateItemQuantity, removeItemFromCart]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

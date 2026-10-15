@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar.jsx";
 import { useCart } from "../context/CartContext.jsx";
 
@@ -10,6 +10,7 @@ const formatPrice = (value) =>
   }).format(value || 0);
 
 function Cart() {
+  const navigate = useNavigate();
   const { cartItems, loading, error, refreshCart, updateItemQuantity, removeItemFromCart, pendingActions } = useCart();
 
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
@@ -146,7 +147,12 @@ function Cart() {
                   <span>Subtotal</span>
                   <strong>{formatPrice(subtotal)}</strong>
                 </div>
-                <button type="button" className="btn btn-primary checkout-button" disabled={cartItems.length === 0}>
+                <button
+                  type="button"
+                  className="btn btn-primary checkout-button"
+                  disabled={cartItems.length === 0}
+                  onClick={() => navigate("/checkout")}
+                >
                   Proceed to Checkout
                 </button>
               </aside>

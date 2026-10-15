@@ -31,6 +31,16 @@ export const updateCartItemQuantity = (productId, quantity) =>
 
 export const removeFromCart = (productId) => api.delete(`/cart/${productId}`);
 
+export const createPaymentOrder = (shippingAddress) =>
+  api.post("/orders/create-payment-order", { shippingAddress });
+
+export const verifyPayment = (paymentDetails) =>
+  api.post("/orders/verify-payment", paymentDetails);
+
+export const getMyOrders = () => api.get("/orders");
+
+export const getOrderById = (orderId) => api.get(`/orders/${orderId}`);
+
 export const logoutCustomer = () => api.post("/customers/logout");
 
 export const getApiErrorMessage = (error, fallback) => {

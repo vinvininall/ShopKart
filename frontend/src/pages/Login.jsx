@@ -39,7 +39,7 @@ function Login() {
         email: formData.email.trim(),
         password: formData.password,
       });
-      navigate("/home");
+      navigate(location.state?.from?.pathname || "/home", { replace: true });
     } catch (err) {
       if (err.response?.status === 401) {
         setError("Invalid Credentials");

@@ -7,17 +7,18 @@ const customerRoutes = require("./routes/customer.routes");
 const productRoutes = require("./routes/product.routes");
 const wishlistRoutes = require("./routes/wishlist.routes");
 const cartRoutes = require("./routes/cart.routes");
+const orderRoutes = require("./routes/order.routes");
 
 const app = express();
 
 const allowedOrigins = (process.env.FRONTEND_ORIGIN || "http://localhost:5173")
   .split(",")
-  .map((origin) => origin.trim());
+  .map((origin) => origin.trim().replace(/\/+$/, ""));
 
 app.use(
   cors({
     origin(origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
+      if (!origin || allowedOrigins.includes(origin.replace(/\/+$/, ""))) {
         callback(null, true);
         return;
       }
@@ -33,6 +34,7 @@ app.use("/customers", customerRoutes);
 app.use("/products", productRoutes);
 app.use("/wishlist", wishlistRoutes);
 app.use("/cart", cartRoutes);
+app.use("/orders", orderRoutes);
 
 app.get("/", (req, res) => {
   res.json({
@@ -45,7 +47,7 @@ const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI;
 
 mongoose
-  .connect(process.env.MONGO_URI)
+  .connect(MONGO_URI)
   .then(() => {
     console.log("MongoDB connected");
     app.listen(PORT, () => {
@@ -53,6 +55,6 @@ mongoose
     });
   })
   .catch((error) => {
-    console.error("MongoDB connection failed:", error.message);
+    console.error("MongoDB connection failed:", error);
     process.exit(1);
   });
